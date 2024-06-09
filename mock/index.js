@@ -5,9 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentInput = ''
   let previousInput = ''
   let currentOperator = ''
-  let result = 0
+  let lastOperator = ''
+  let lastOperand = ''
 
   function calculate() {
+    let result
     let firstValue = parseFloat(previousInput)
     let secondValue = parseFloat(currentInput)
 
@@ -33,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   keys.forEach((key) => {
     key.addEventListener('click', (event) => {
       const { action, operator, integer } = event.target.dataset
-      Array.from(key.parentNode.children).forEach((k) => k.classList.remove('isPressed'))
+      keys.forEach((k) => k.classList.remove('isPressed'))
 
       if (integer) {
         currentInput += integer
@@ -49,13 +51,33 @@ document.addEventListener('DOMContentLoaded', () => {
         currentOperator = operator
       }
 
+      if (!display.textContent.includes('.'))
+        if (action === 'decimal') {
+          currentInput += '.'
+          display.textContent = currentInput
+        }
+
       if (action === 'equals') {
         if (currentInput !== '' && previousInput !== '' && currentOperator !== '') {
+          display.textContent = calculate()
+          lastOperand = currentInput
+          lastOperator = currentOperator
+          previousInput = display.textContent
+          currentInput = ''
+          currentOperator = ''
+        } else if (lastOperand !== '' && lastOperator !== '') {
+          currentInput = lastOperand
+          currentOperator = lastOperator
           display.textContent = calculate()
           previousInput = display.textContent
           currentInput = ''
           currentOperator = ''
         }
+      }
+
+      if (action === 'percent') {
+        currentInput = display.textContent / 100
+        display.textContent = currentInput
       }
 
       if (action === 'clear') {
