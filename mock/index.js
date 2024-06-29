@@ -2,89 +2,97 @@ document.addEventListener('DOMContentLoaded', () => {
   const base = document.querySelector('.base')
   const display = base.querySelector('.screen')
   const keys = base.querySelectorAll('.buttons__key')
+
   let currentInput = ''
-  let previousInput = ''
-  let currentOperator = ''
-  let lastOperator = ''
-  let lastOperand = ''
+  let currentOperator = null
+  let previousOperand = null
+  let openParenCount = 0
+
+  function clearInp() {
+    currentInput = ''
+    currentOperator = null
+    previousOperand = null
+    display.textContent = '0'
+  }
+
+  function appendNumber(number) {
+    if (number === '.' && currentInput.includes('.')) return
+    currentInput += number
+    display.textContent = currentInput
+  }
+
+  function chooseOperation(operator) {
+    if (currentInput === '') return
+    if (previousOperand !== null) {
+      calculate()
+    }
+    currentOperator = operator
+    previousOperand = currentInput
+    currentInput = ''
+  }
 
   function calculate() {
     let result
-    let firstValue = parseFloat(previousInput)
-    let secondValue = parseFloat(currentInput)
+    const prev = parseFloat(previousOperand)
+    const current = parseFloat(currentInput)
+    if (isNaN(prev) || isNaN(current)) return
 
     switch (currentOperator) {
-      case 'plus':
-        result = firstValue + secondValue
+      case '+':
+        result = prev + current
         break
-      case 'minus':
-        result = firstValue - secondValue
+      case '-':
+        result = prev - current
         break
-      case 'multiply':
-        result = firstValue * secondValue
+      case '*':
+        result = prev * current
         break
-      case 'divide':
-        result = firstValue / secondValue
+      case '/':
+        result = prev / current
         break
       default:
-        result = secondValue
+        return
     }
-    return result
+
+    currentInput = result.toString()
+    currentOperator = null
+    previousOperand = null
+    display.textContent = currentInput
+  }
+
+  function handlePercent() {
+    if (currentInput !== '') {
+      currentInput = (parseFloat(currentInput) / 100).toString()
+      display.textContent = currentInput
+    }
   }
 
   keys.forEach((key) => {
     key.addEventListener('click', (event) => {
       const { action, operator, integer } = event.target.dataset
-      keys.forEach((k) => k.classList.remove('isPressed'))
 
       if (integer) {
-        currentInput += integer
+        appendNumber(integer)
+      } else if (operator) {
+        chooseOperation(operator)
+      } else if (action === 'decimal') {
+        appendNumber('.')
+      } else if (action === 'equals') {
+        calculate()
+      } else if (action === 'percent') {
+        handlePercent()
+      } else if (action === 'clear') {
+        clearInp()
+      } else if (action === 'leftPar') {
+        currentInput += '('
+        openParenCount++
         display.textContent = currentInput
-      }
-
-      if (operator) {
-        if (currentInput !== '') {
-          previousInput = currentInput
-          currentInput = ''
-        }
-        key.classList.add('isPressed')
-        currentOperator = operator
-      }
-
-      if (!display.textContent.includes('.'))
-        if (action === 'decimal') {
-          currentInput += '.'
+      } else if (action === 'rightPar') {
+        if (openParenCount > 0 && !currentInput.endsWith('(')) {
+          currentInput += ')'
+          openParenCount--
           display.textContent = currentInput
         }
-
-      if (action === 'equals') {
-        if (currentInput !== '' && previousInput !== '' && currentOperator !== '') {
-          display.textContent = calculate()
-          lastOperand = currentInput
-          lastOperator = currentOperator
-          previousInput = display.textContent
-          currentInput = ''
-          currentOperator = ''
-        } else if (lastOperand !== '' && lastOperator !== '') {
-          currentInput = lastOperand
-          currentOperator = lastOperator
-          display.textContent = calculate()
-          previousInput = display.textContent
-          currentInput = ''
-          currentOperator = ''
-        }
-      }
-
-      if (action === 'percent') {
-        currentInput = display.textContent / 100
-        display.textContent = currentInput
-      }
-
-      if (action === 'clear') {
-        currentInput = ''
-        previousInput = ''
-        currentOperator = ''
-        display.textContent = '0'
       }
     })
   })
