@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentInput = ''
   let currentOperator = null
   let previousOperand = null
-  let openParenCount = 0
 
   function clearInp() {
     currentInput = ''
@@ -27,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
       calculate()
     }
     currentOperator = operator
-    previousOperand = currentInput
+    previousOperand = currentInput // Store the current input as the previous operand
     currentInput = ''
   }
 
@@ -54,9 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return
     }
 
-    currentInput = result.toString()
-    currentOperator = null
-    previousOperand = null
+    currentInput = result.toString() // Display the result
     display.textContent = currentInput
   }
 
@@ -81,18 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
         calculate()
       } else if (action === 'percent') {
         handlePercent()
-      } else if (action === 'clear') {
+      } else {
         clearInp()
-      } else if (action === 'leftPar') {
-        currentInput += '('
-        openParenCount++
-        display.textContent = currentInput
-      } else if (action === 'rightPar') {
-        if (openParenCount > 0 && !currentInput.endsWith('(')) {
-          currentInput += ')'
-          openParenCount--
-          display.textContent = currentInput
-        }
       }
     })
   })
