@@ -1,35 +1,88 @@
-@import './base.css';
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+.base {
+  width: 39.4rem;
+  height: 48rem;
+  background-color: var(--light-sky-blue);
+  border-radius: 1rem;
+  box-shadow: 0rem 0.4rem 0.4rem 0rem rgb(0, 0, 0, 0.25);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  user-select: none;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+.screen {
+  width: 34.6rem;
+  height: 8rem;
+  background-color: var(--light-gray);
+  margin: 2.4rem;
+  border-radius: 1.5rem;
+  box-shadow: 0rem 0.4rem 0.4rem 0rem rgb(0, 0, 0, 0.25);
+  font-size: 4rem;
+  color: var(--cool-gray);
+  text-align: right;
+  align-content: end;
+  padding: 1rem;
+  overflow: hidden;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 6.6rem);
+  grid-template-rows: repeat(5, 5rem);
+  gap: 1.6rem;
+  margin-inline: 4rem;
+  font-size: 3.2rem;
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+.buttons__key {
+  background-color: var(--soft-blue);
+  border-radius: 1.5rem;
+  box-shadow: 0rem 0.4rem 0.4rem 0rem rgb(0, 0, 0, 0.25);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+.buttons__key:hover {
+  opacity: 0.6;
+}
+
+.buttons__key:active,
+.isPressed {
+  box-shadow: inset 0rem 0.4rem 0.4rem 0rem rgba(0, 0, 0, 0.25);
+}
+
+.buttons__numbers {
+  background-color: var(--soft-blue);
+  border-radius: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+.buttons__actions {
+  background-color: var(--medium-slate-blue);
+  border-radius: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+.buttons__equal-sign {
+  grid-column: span 2;
+  background-color: var(--steel-gray);
+  border-radius: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+.clear_btn {
+  grid-column: span 2;
 }
